@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="استوديو عربي لإنشاء برومبتات احترافية للصور والفيديوهات بالذكاء الاصطناعي." />
+  <meta name="theme-color" content="#6d5dfc" />
+  <title>استوديو برومبتات الصور والفيديو بالذكاء الاصطناعي</title>
+  <style>
+/* =========================
+   المتغيرات والأساسيات
+========================= */
+:root {
+  --font-ar: "Cairo", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --bg: #f6f7fb;
+  --surface: #ffffff;
+  --surface-soft: #f0f2f8;
+  --surface-glass: rgba(255, 255, 255, 0.76);
+  --text: #1c2130;
+  --muted: #697087;
+  --border: #dde1ec;
+  --primary: #6d5dfc;
+  --primary-dark: #5143d8;
+  --secondary: #0fa3b1;
+  --accent: #ff7a90;
+  --success: #159a66;
+  --danger: #d74d61;
+  --warning: #d08b1f;
+  --shadow-sm: 0 10px 28px rgba(33, 39, 70, 0.08);
+  --shadow-lg: 0 24px 70px rgba(30, 34, 60, 0.16);
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 28px;
+  --container: min(1180px, calc(100% - 32px));
+  --transition: 220ms ease;
+}
+
+[data-theme="dark"] {
+  --bg: #0e1017;
+  --surface: #171a25;
+  --surface-soft: #202432;
+  --surface-glass: rgba(23, 26, 37, 0.82);
+  --text: #f4f5fa;
+  --muted: #a8aec2;
+  --border: #2d3243;
+  --primary: #8b7fff;
+  --primary-dark: #7569f0;
+  --secondary: #34c2cd;
+  --accent: #ff8da0;
+  --shadow-sm: 0 10px 28px rgba(0, 0, 0, 0.24);
+  --shadow-lg: 0 24px 70px rgba(0, 0, 0, 0.38);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--font-ar);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+body.modal-open { overflow: hidden; }
+button, input, textarea, select { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+.container { width: var(--container); margin-inline: auto; }
+.section { padding: 82px 0; }
+.alt-section { background: color-mix(in srgb, var(--surface-soft) 68%, transparent); }
+
+.skip-link {
+  position: fixed;
+  inset-inline-start: 16px;
+  top: -80px;
+  z-index: 9999;
+  padding: 10px 14px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 10px;
+}
+.skip-link:focus { top: 12px; }
+
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--primary) 62%, white);
+  outline-offset: 3px;
+}
+
+/* =========================
+   الهيدر
+========================= */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(16px);
+  background: var(--surface-glass);
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+}
+.nav-wrap {
+  min-height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.brand { display: inline-flex; align-items: center; gap: 10px; min-width: max-content; }
+.brand-mark {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+.brand strong { display: block; font-size: .98rem; line-height: 1.15; }
+.brand small { display: block; color: var(--muted); font-size: .72rem; }
+.main-nav { display: flex; align-items: center; justify-content: center; gap: 24px; }
+.main-nav a { color: var(--muted); font-size: .92rem; font-weight: 700; transition: var(--transition); }
+.main-nav a:hover { color: var(--primary); }
+.icon-button {
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 13px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: var(--transition);
+}
+.icon-button:hover { transform: translateY(-2px); border-color: var(--primary); }
+
+/* =========================
+   Hero
+========================= */
+.hero {
+  position: relative;
+  padding: 92px 0 78px;
+  overflow: hidden;
+}
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  width: 440px;
+  height: 440px;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: .15;
+  pointer-events: none;
+}
+.hero::before { background: var(--primary); inset-inline-start: -170px; top: -160px; }
+.hero::after { background: var(--secondary); inset-inline-end: -170px; bottom: -200px; }
+.hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 70px; align-items: center; }
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: .78rem;
+  font-weight: 800;
+  letter-spacing: .02em;
+  color: var(--primary);
+}
+.hero h1 {
+  font-size: clamp(2.2rem, 5vw, 4.2rem);
+  line-height: 1.25;
+  letter-spacing: -.04em;
+  margin: 14px 0 20px;
+  max-width: 800px;
+}
+.hero p { color: var(--muted); font-size: 1.05rem; max-width: 760px; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.btn {
+  min-height: 46px;
+  border: 0;
+  border-radius: 14px;
+  padding: 11px 18px;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: var(--transition);
+}
+.btn:hover { transform: translateY(-2px); }
+.btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; box-shadow: 0 12px 30px rgba(109, 93, 252, .26); }
+.btn-secondary { background: color-mix(in srgb, var(--secondary) 18%, var(--surface)); color: var(--secondary); border: 1px solid color-mix(in srgb, var(--secondary) 40%, var(--border)); }
+.btn-ghost { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+.btn-danger { background: color-mix(in srgb, var(--danger) 14%, var(--surface)); color: var(--danger); border: 1px solid color-mix(in srgb, var(--danger) 34%, var(--border)); }
+.hero-stats { display: flex; gap: 28px; margin-top: 34px; flex-wrap: wrap; }
+.hero-stats div { display: grid; gap: 2px; }
+.hero-stats strong { font-size: 1.35rem; }
+.hero-stats span { color: var(--muted); font-size: .82rem; }
+
+.hero-panel {
+  min-height: 430px;
+  position: relative;
+  border-radius: 38px;
+  border: 1px solid var(--border);
+  background:
+    radial-gradient(circle at 25% 25%, color-mix(in srgb, var(--primary) 20%, transparent), transparent 34%),
+    radial-gradient(circle at 78% 72%, color-mix(in srgb, var(--secondary) 20%, transparent), transparent 34%),
+    var(--surface);
+  box-shadow: var(--shadow-lg);
+}
+.prompt-orb {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  background: linear-gradient(145deg, var(--primary), var(--secondary));
+  color: #fff;
+  box-shadow: 0 30px 70px rgba(93, 82, 220, .3);
+  animation: float 5s ease-in-out infinite;
+}
+.prompt-orb span { font-size: 2rem; }
+.prompt-orb b { font-size: 1.25rem; }
+.prompt-orb small { opacity: .84; }
+.mock-card {
+  position: absolute;
+  width: 190px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface-glass);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-sm);
+}
+.mock-card span { font-size: 1.6rem; display: block; }
+.mock-card strong { display: block; margin-top: 8px; }
+.mock-card small { color: var(--muted); }
+.mock-a { inset-inline-start: 26px; top: 36px; transform: rotate(-4deg); }
+.mock-b { inset-inline-end: 22px; bottom: 34px; transform: rotate(4deg); }
+@keyframes float { 0%,100% { transform: translate(-50%, -50%) translateY(0); } 50% { transform: translate(-50%, -50%) translateY(-10px); } }
+
+/* =========================
+   البحث والفلاتر
+========================= */
+.generator-hub { padding-bottom: 12px; }
+.search-filter-panel {
+  padding: 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+.search-box, .mini-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0 14px;
+}
+.search-box input, .mini-search input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text);
+  min-height: 48px;
+}
+.filter-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+.filter-chip {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 8px 13px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 700;
+  font-size: .84rem;
+}
+.filter-chip:hover, .filter-chip.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+/* =========================
+   الأقسام والبطاقات
+========================= */
+.section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+.section-heading.compact { margin-bottom: 18px; }
+.section-heading h2 { margin: 5px 0 2px; font-size: clamp(1.65rem, 3vw, 2.35rem); }
+.section-heading p { margin: 0; color: var(--muted); }
+.count-badge, .result-meta {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 7px 11px;
+  font-size: .78rem;
+  white-space: nowrap;
+}
+.cards-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.type-card {
+  text-align: right;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  min-height: 164px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+}
+.type-card::after {
+  content: "";
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  inset-inline-end: -36px;
+  top: -32px;
+  background: color-mix(in srgb, var(--primary) 14%, transparent);
+}
+.type-card:hover { transform: translateY(-5px); border-color: color-mix(in srgb, var(--primary) 65%, var(--border)); box-shadow: var(--shadow-sm); }
+.type-icon {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--surface-soft);
+  font-size: 1.4rem;
+  margin-bottom: 14px;
+}
+.type-card h3 { font-size: 1rem; margin: 0 0 6px; }
+.type-card p { color: var(--muted); margin: 0; font-size: .78rem; line-height: 1.6; }
+.type-card .card-arrow { position: absolute; inset-inline-end: 16px; bottom: 13px; color: var(--primary); font-weight: 800; }
+.hidden-card { display: none !important; }
+
+/* =========================
+   القوالب والمحفوظات
+========================= */
+.templates-grid, .saved-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.template-card, .saved-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+.template-top, .saved-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+.template-icon { font-size: 1.8rem; }
+.kind-pill {
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: var(--surface-soft);
+  color: var(--muted);
+  font-size: .72rem;
+  font-weight: 800;
+}
+.template-card h3, .saved-card h3 { margin: 14px 0 8px; font-size: 1.03rem; }
+.template-card p, .saved-card p { color: var(--muted); font-size: .82rem; margin: 0 0 16px; }
+.template-card .btn { width: 100%; }
+.saved-heading { align-items: center; }
+.mini-search { width: min(330px, 100%); }
+.saved-card pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 160px;
+  overflow: auto;
+  font-family: var(--font-ar);
+  font-size: .78rem;
+  background: var(--surface-soft);
+  border-radius: 12px;
+  padding: 12px;
+  color: var(--muted);
+  direction: rtl;
+}
+.saved-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.saved-actions .btn { min-height: 38px; padding: 7px 10px; font-size: .76rem; flex: 1 1 auto; }
+.empty-state {
+  text-align: center;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+  padding: 44px 20px;
+  color: var(--muted);
+}
+.empty-state span { font-size: 2.4rem; }
+.empty-state h3 { color: var(--text); margin-bottom: 4px; }
+
+/* =========================
+   المودال والنموذج
+========================= */
+.modal[hidden] { display: none; }
+.modal { position: fixed; inset: 0; z-index: 500; display: grid; place-items: center; padding: 18px; }
+.modal-backdrop { position: absolute; inset: 0; background: rgba(10, 12, 18, .65); backdrop-filter: blur(7px); }
+.modal-dialog {
+  position: relative;
+  width: min(1080px, 100%);
+  max-height: calc(100vh - 36px);
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 26px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 22px;
+  border-bottom: 1px solid var(--border);
+}
+.modal-header h2 { margin: 2px 0 0; font-size: 1.35rem; }
+.modal-content { padding: 22px; overflow: auto; }
+.stepper { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.stepper span { padding: 6px 10px; border-radius: 999px; background: var(--surface-soft); color: var(--muted); font-size: .74rem; font-weight: 700; }
+.stepper span.active { color: var(--primary); background: color-mix(in srgb, var(--primary) 12%, var(--surface)); }
+.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.field, .full-field { display: grid; gap: 7px; }
+.full-field { grid-column: 1 / -1; margin-top: 16px; }
+.field label, .full-field label { font-size: .84rem; font-weight: 800; }
+.field small { color: var(--muted); font-size: .72rem; }
+input, textarea, select {
+  width: 100%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 11px 12px;
+  outline: 0;
+  transition: var(--transition);
+}
+textarea { resize: vertical; min-height: 92px; }
+input:focus, textarea:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 11%, transparent); }
+.language-block, .negative-block { padding: 16px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface-soft); }
+.text-button { justify-self: start; background: transparent; border: 0; color: var(--primary); padding: 0; cursor: pointer; font-weight: 800; }
+.form-actions, .result-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+.sticky-actions { position: sticky; bottom: -22px; padding: 14px 0 4px; background: linear-gradient(to top, var(--surface) 78%, transparent); z-index: 2; }
+.result-panel { margin-top: 24px; border-top: 1px solid var(--border); padding-top: 22px; }
+.result-header { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 12px; }
+.result-header h3 { margin: 3px 0 0; }
+.prompt-output { min-height: 320px; direction: rtl; line-height: 1.8; background: var(--surface-soft); }
+
+/* =========================
+   التنبيهات والفوتر
+========================= */
+.toast-container { position: fixed; inset-inline-start: 20px; bottom: 20px; z-index: 1000; display: grid; gap: 10px; width: min(360px, calc(100% - 40px)); }
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 14px;
+  border-radius: 13px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+  animation: toastIn .25s ease;
+}
+.toast.success { border-inline-start: 4px solid var(--success); }
+.toast.error { border-inline-start: 4px solid var(--danger); }
+.toast.info { border-inline-start: 4px solid var(--primary); }
+@keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.site-footer { padding: 28px 0; border-top: 1px solid var(--border); background: var(--surface); }
+.footer-wrap { display: flex; justify-content: space-between; gap: 20px; align-items: center; color: var(--muted); font-size: .84rem; }
+.footer-wrap a { color: var(--primary); font-weight: 800; }
+
+/* =========================
+   الاستجابة للشاشات
+========================= */
+@media (max-width: 1000px) {
+  .main-nav { display: none; }
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-panel { min-height: 360px; }
+  .cards-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .templates-grid, .saved-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+  .section { padding: 58px 0; }
+  .hero { padding-top: 62px; }
+  .hero h1 { font-size: 2.25rem; }
+  .hero-panel { min-height: 320px; }
+  .prompt-orb { width: 138px; height: 138px; }
+  .mock-card { width: 155px; padding: 13px; }
+  .cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .templates-grid, .saved-grid, .form-grid { grid-template-columns: 1fr; }
+  .section-heading, .saved-heading { align-items: flex-start; flex-direction: column; }
+  .mini-search { width: 100%; }
+  .modal { padding: 0; }
+  .modal-dialog { max-height: 100vh; height: 100vh; border-radius: 0; border: 0; }
+  .modal-content { padding: 18px; }
+  .modal-header { padding: 16px 18px; }
+  .footer-wrap { flex-direction: column; align-items: flex-start; }
+}
+
+@media (max-width: 520px) {
+  :root { --container: min(100% - 22px, 1180px); }
+  .cards-grid { grid-template-columns: 1fr; }
+  .hero-actions .btn, .form-actions .btn, .result-actions .btn { width: 100%; }
+  .hero-stats { gap: 18px; }
+  .hero-panel { min-height: 280px; }
+  .mock-a { inset-inline-start: 10px; top: 20px; }
+  .mock-b { inset-inline-end: 8px; bottom: 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+}
+
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#mainContent">انتقل إلى المحتوى</a>
+
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="#top" aria-label="العودة إلى أعلى الصفحة">
+        <span class="brand-mark" aria-hidden="true">✦</span>
+        <span>
+          <strong>AI Prompt Studio</strong>
+          <small>صور وفيديو</small>
+        </span>
+      </a>
+
+      <nav class="main-nav" aria-label="التنقل الرئيسي">
+        <a href="#imageSection">تصميم الصور</a>
+        <a href="#videoSection">تصميم الفيديو</a>
+        <a href="#templatesSection">قوالب جاهزة</a>
+        <a href="#savedSection">أوامري المحفوظة</a>
+      </nav>
+
+      <button id="themeToggle" class="icon-button" type="button" aria-label="تبديل الوضع الليلي والنهاري" title="الوضع الليلي/النهاري">
+        <span id="themeIcon" aria-hidden="true">🌙</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="mainContent">
+    <section class="hero" id="top">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">مصمم برومبتات ذكي • عربي • RTL</span>
+          <h1>استوديو تصميم الصور والفيديوهات بالذكاء الاصطناعي</h1>
+          <p>
+            اختر نوع الصورة أو الفيديو، أدخل تفاصيلك، ثم أنشئ برومبتًا احترافيًا منظمًا وقابلًا للنسخ والحفظ خلال خطوات قليلة.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#generatorHub">ابدأ إنشاء البرومبت</a>
+            <a class="btn btn-ghost" href="#templatesSection">استعرض القوالب</a>
+          </div>
+          <div class="hero-stats" aria-label="مزايا سريعة">
+            <div><strong>60+</strong><span>نوعًا وقالبًا</span></div>
+            <div><strong>3</strong><span>لغات إخراج</span></div>
+            <div><strong>100%</strong><span>حفظ محلي</span></div>
+          </div>
+        </div>
+
+        <div class="hero-panel" aria-hidden="true">
+          <div class="mock-card mock-a">
+            <span>🎬</span>
+            <strong>Video Prompt</strong>
+            <small>Camera • Motion • Audio</small>
+          </div>
+          <div class="mock-card mock-b">
+            <span>🖼️</span>
+            <strong>Image Prompt</strong>
+            <small>Light • Style • Quality</small>
+          </div>
+          <div class="prompt-orb">
+            <span>✦</span>
+            <b>Prompt</b>
+            <small>Generator</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="generator-hub section" id="generatorHub">
+      <div class="container">
+        <div class="section-heading compact">
+          <div>
+            <span class="eyebrow">اختر ما تريد تصميمه</span>
+            <h2>ابحث، صفِّ، ثم ابدأ</h2>
+          </div>
+        </div>
+
+        <div class="search-filter-panel">
+          <label class="search-box" for="typeSearch">
+            <span aria-hidden="true">⌕</span>
+            <input id="typeSearch" type="search" placeholder="ابحث عن نوع صورة أو فيديو..." autocomplete="off" />
+          </label>
+          <div id="filterChips" class="filter-chips" aria-label="فلاتر أنواع المحتوى"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="imageSection">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">Image Prompt Builder</span>
+            <h2>تصميم الصور</h2>
+            <p>اختر النمط المناسب ثم أدخل تفاصيل المشهد لتوليد برومبت كامل.</p>
+          </div>
+          <span class="count-badge" id="imageCount">0 نوع</span>
+        </div>
+        <div id="imageCards" class="cards-grid" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="section alt-section" id="videoSection">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">Video Prompt Builder</span>
+            <h2>تصميم الفيديوهات</h2>
+            <p>حدّد الحركة والكاميرا والإيقاع والصوت لإنشاء برومبت فيديو سينمائي منظم.</p>
+          </div>
+          <span class="count-badge" id="videoCount">0 نوع</span>
+        </div>
+        <div id="videoCards" class="cards-grid" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="section" id="templatesSection">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">ابدأ أسرع</span>
+            <h2>قوالب جاهزة</h2>
+            <p>قوالب للصور والفيديوهات يمكنك تحميلها داخل النموذج ثم تعديلها مباشرة.</p>
+          </div>
+        </div>
+        <div id="templateCards" class="templates-grid"></div>
+      </div>
+    </section>
+
+    <section class="section alt-section" id="savedSection">
+      <div class="container">
+        <div class="section-heading saved-heading">
+          <div>
+            <span class="eyebrow">LocalStorage</span>
+            <h2>أوامري المحفوظة</h2>
+            <p>يتم الحفظ على جهازك فقط داخل المتصفح.</p>
+          </div>
+          <label class="mini-search" for="savedSearch">
+            <span aria-hidden="true">⌕</span>
+            <input id="savedSearch" type="search" placeholder="بحث في البرومبتات..." />
+          </label>
+        </div>
+        <div id="savedPrompts" class="saved-grid"></div>
+        <div id="savedEmpty" class="empty-state">
+          <span aria-hidden="true">🗂️</span>
+          <h3>لا توجد أوامر محفوظة بعد</h3>
+          <p>أنشئ برومبتًا ثم اضغط «حفظ البرومبت» ليظهر هنا.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-wrap">
+      <p>استوديو متخصص حصريًا في إنشاء برومبتات الصور والفيديو بالذكاء الاصطناعي.</p>
+      <a href="#top">العودة للأعلى ↑</a>
+    </div>
+  </footer>
+
+  <!-- نافذة إنشاء البرومبت -->
+  <div id="builderModal" class="modal" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <section class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <header class="modal-header">
+        <div>
+          <span id="modalKind" class="eyebrow">تصميم صورة</span>
+          <h2 id="modalTitle">إنشاء برومبت</h2>
+        </div>
+        <button id="modalClose" class="icon-button" type="button" aria-label="إغلاق النافذة">✕</button>
+      </header>
+
+      <div class="modal-content">
+        <div class="stepper" aria-label="خطوات إنشاء البرومبت">
+          <span class="active">1. اختر النوع</span>
+          <span class="active">2. أدخل التفاصيل</span>
+          <span>3. أنشئ وانسخ</span>
+        </div>
+
+        <form id="promptForm" novalidate>
+          <div id="dynamicFields" class="form-grid"></div>
+
+          <div class="full-field language-block">
+            <label for="promptLanguage">لغة البرومبت</label>
+            <select id="promptLanguage" name="promptLanguage">
+              <option value="ar">العربية</option>
+              <option value="en">الإنجليزية</option>
+              <option value="both" selected>عربي + إنجليزي</option>
+            </select>
+          </div>
+
+          <div class="full-field negative-block">
+            <label for="negativePrompt">Negative Prompt</label>
+            <textarea id="negativePrompt" name="negativePrompt" rows="4" placeholder="العناصر التي يجب منع ظهورها..."></textarea>
+            <button id="fillNegative" type="button" class="text-button">استخدام قائمة منع مقترحة</button>
+          </div>
+
+          <div class="form-actions sticky-actions">
+            <button id="generatePrompt" type="submit" class="btn btn-primary">✦ إنشاء البرومبت</button>
+            <button id="resetForm" type="button" class="btn btn-ghost">↺ مسح وإعادة البدء</button>
+          </div>
+        </form>
+
+        <section id="resultPanel" class="result-panel" hidden aria-live="polite">
+          <div class="result-header">
+            <div>
+              <span class="eyebrow">النتيجة</span>
+              <h3>البرومبت النهائي</h3>
+            </div>
+            <span id="resultMeta" class="result-meta"></span>
+          </div>
+
+          <textarea id="promptOutput" class="prompt-output" rows="16" aria-label="البرومبت النهائي"></textarea>
+
+          <div class="result-actions">
+            <button id="copyPrompt" type="button" class="btn btn-primary">📋 نسخ البرومبت</button>
+            <button id="savePrompt" type="button" class="btn btn-secondary">💾 حفظ البرومبت</button>
+            <button id="improvePrompt" type="button" class="btn btn-ghost">✨ تحسين البرومبت</button>
+          </div>
+        </section>
+      </div>
+    </section>
+  </div>
+
+  <div id="toastContainer" class="toast-container" aria-live="assertive" aria-atomic="true"></div>
+
+  <script>
+"use strict";
+
+/* =========================
+   البيانات الأساسية
+========================= */
+const IMAGE_TYPES = [
+  ["الصور الواقعية", "📷", ["صور", "واقعي"]],
+  ["الصور فائقة الواقعية Hyperrealistic", "🔎", ["صور", "واقعي"]],
+  ["الصور السينمائية", "🎞️", ["صور", "سينمائي"]],
+  ["الصور ثلاثية الأبعاد 3D", "🧊", ["صور", "3D"]],
+  ["أسلوب Pixar 3D", "✨", ["صور", "3D", "كرتوني", "شخصيات"]],
+  ["الصور الكرتونية", "🎨", ["صور", "كرتوني"]],
+  ["الأنمي", "🌸", ["صور", "كرتوني", "شخصيات"]],
+  ["الصور التعليمية", "📚", ["صور", "تعليمي"]],
+  ["الإنفوجرافيك", "📊", ["صور", "تعليمي"]],
+  ["الصور الإعلانية", "📣", ["صور", "إعلاني"]],
+  ["صور المنتجات", "🛍️", ["صور", "منتجات", "إعلاني"]],
+  ["الصور الشخصية", "👤", ["صور", "شخصيات"]],
+  ["صور الشخصيات", "🧑‍🎨", ["صور", "شخصيات"]],
+  ["الصور التاريخية", "🏺", ["صور", "واقعي"]],
+  ["الصور التراثية", "🕌", ["صور", "واقعي"]],
+  ["الصور المستقبلية", "🔮", ["صور"]],
+  ["الخيال العلمي", "👽", ["صور", "سينمائي"]],
+  ["الفضاء والكواكب", "🪐", ["صور", "سينمائي"]],
+  ["الطبيعة", "🌿", ["صور", "واقعي"]],
+  ["العمارة", "🏛️", ["صور", "واقعي"]],
+  ["الديكور الداخلي", "🛋️", ["صور", "واقعي"]],
+  ["الأزياء", "👗", ["صور", "شخصيات", "إعلاني"]],
+  ["أغلفة الكتب", "📕", ["صور", "إعلاني"]],
+  ["الملصقات", "🏷️", ["صور", "إعلاني"]],
+  ["البوسترات", "🪧", ["صور", "إعلاني"]],
+  ["الصور المصغرة Thumbnail", "▶️", ["صور", "إعلاني"]],
+  ["خلفيات المواقع والعروض", "🖥️", ["صور"]],
+  ["الصور بدون خلفية PNG", "🧩", ["صور", "منتجات"]],
+  ["أوراق العمل التعليمية", "📝", ["صور", "تعليمي"]],
+  ["الشخصيات التعليمية", "👩‍🏫", ["صور", "تعليمي", "شخصيات"]],
+  ["الواقع المعزز AR", "📱", ["صور", "3D"]],
+  ["الواقع الافتراضي VR", "🥽", ["صور", "3D"]],
+  ["الواقع المختلط MR", "🧠", ["صور", "3D"]]
+];
+
+const VIDEO_TYPES = [
+  ["فيديو واقعي", "🎥", ["فيديو", "واقعي"]],
+  ["فيديو سينمائي", "🎬", ["فيديو", "سينمائي"]],
+  ["فيديو تعليمي", "🧑‍🏫", ["فيديو", "تعليمي"]],
+  ["فيديو إعلاني", "📢", ["فيديو", "إعلاني"]],
+  ["فيديو قصير Reels", "📱", ["فيديو", "إعلاني"]],
+  ["فيديو TikTok", "🎵", ["فيديو", "إعلاني"]],
+  ["فيديو YouTube", "▶️", ["فيديو"]],
+  ["فيديو Story", "📲", ["فيديو"]],
+  ["فيديو 3D", "🧊", ["فيديو", "3D"]],
+  ["فيديو Pixar 3D", "✨", ["فيديو", "3D", "كرتوني", "شخصيات"]],
+  ["فيديو أنمي", "🌸", ["فيديو", "كرتوني", "شخصيات"]],
+  ["فيديو وثائقي", "🎞️", ["فيديو", "واقعي"]],
+  ["فيديو تاريخي", "🏺", ["فيديو", "واقعي"]],
+  ["فيديو تراثي", "🕌", ["فيديو", "واقعي"]],
+  ["فيديو خيال علمي", "👽", ["فيديو", "سينمائي"]],
+  ["فيديو فضائي", "🚀", ["فيديو", "سينمائي"]],
+  ["فيديو تحريك الصور", "🖼️", ["فيديو"]],
+  ["فيديو تحريك الشخصيات", "🕺", ["فيديو", "شخصيات"]],
+  ["فيديو تحويل صورة إلى فيديو", "🔁", ["فيديو"]],
+  ["فيديو متحدث بالذكاء الاصطناعي", "🗣️", ["فيديو", "شخصيات"]],
+  ["فيديو Storytelling", "📖", ["فيديو", "سينمائي"]],
+  ["فيديو تعليمي للأطفال", "🧒", ["فيديو", "تعليمي", "كرتوني"]],
+  ["فيديو Motion Graphics", "💫", ["فيديو", "إعلاني"]],
+  ["فيديو Product Showcase", "📦", ["فيديو", "منتجات", "إعلاني"]],
+  ["فيديو Drone Cinematic", "🚁", ["فيديو", "سينمائي"]],
+  ["فيديو Time-Lapse", "⏱️", ["فيديو", "سينمائي"]],
+  ["فيديو Slow Motion", "🐢", ["فيديو", "سينمائي"]],
+  ["فيديو الواقع الافتراضي VR", "🥽", ["فيديو", "3D"]],
+  ["فيديو الواقع المعزز AR", "📱", ["فيديو", "3D"]]
+];
+
+const FILTERS = ["الكل", "صور", "فيديو", "تعليمي", "إعلاني", "سينمائي", "واقعي", "3D", "كرتوني", "شخصيات", "منتجات"];
+
+const CAMERA_MOVES = [
+  "Static Shot", "Pan Left", "Pan Right", "Tilt Up", "Tilt Down", "Zoom In", "Zoom Out",
+  "Dolly In", "Dolly Out", "Tracking Shot", "Orbit Shot", "Crane Shot", "Drone Shot", "Handheld",
+  "Cinematic Slow Motion"
+];
+
+const IMAGE_ASPECTS = ["1:1", "16:9", "9:16", "4:3", "3:2", "A4", "Story", "Instagram Post", "YouTube Thumbnail", "PowerPoint 16:9"];
+const VIDEO_ASPECTS = ["16:9", "9:16", "1:1", "4:3", "Story", "Reels", "TikTok", "YouTube"];
+
+const DEFAULT_NEGATIVE_AR = "تشوه الوجه، أيدٍ مشوهة، أصابع زائدة، أطراف إضافية، نصوص عشوائية، علامات مائية، شعارات غير مطلوبة، ضبابية، تشوهات، تكرار العناصر، نسب جسم غير طبيعية، قص سيئ، انخفاض الجودة، ضوضاء بصرية، تفاصيل غير واضحة";
+const DEFAULT_NEGATIVE_EN = "deformed face, malformed hands, extra fingers, extra limbs, random text, watermarks, unwanted logos, blur, artifacts, duplicated elements, unnatural body proportions, bad crop, low quality, visual noise, unclear details";
+
+const TEMPLATES = [
+  {
+    id: "edu-image",
+    kind: "image",
+    icon: "📚",
+    title: "صورة تعليمية احترافية",
+    type: "الصور التعليمية",
+    description: "مشهد تعليمي واضح مناسب للشرح والعروض.",
+    values: {
+      subject: "معلمة تشرح مفهومًا تعليميًا للطالبات داخل فصل حديث",
+      goal: "صورة تعليمية داعمة لشرح الدرس",
+      audience: "طالبات المرحلة المتوسطة",
+      place: "فصل دراسي حديث ومنظم",
+      composition: "تكوين متوازن مع نقطة تركيز واضحة ومساحة فارغة للنص",
+      lighting: "إضاءة نهارية ناعمة ومتوازنة",
+      colors: "ألوان هادئة وتعليمية",
+      style: "احترافي تعليمي واقعي",
+      quality: "4K high detail",
+      aspectRatio: "16:9"
+    }
+  },
+  {
+    id: "product-image",
+    kind: "image",
+    icon: "🛍️",
+    title: "صورة منتج إعلانية",
+    type: "صور المنتجات",
+    description: "عرض منتج بإضاءة استوديو وتكوين تسويقي نظيف.",
+    values: {
+      subject: "منتج فاخر في منتصف المشهد",
+      goal: "إعلان رقمي احترافي",
+      background: "خلفية استوديو بسيطة ومتدرجة",
+      composition: "Hero product composition مع تركيز كامل على المنتج",
+      cameraAngle: "زاوية أمامية منخفضة قليلًا",
+      lens: "85mm product photography lens",
+      lighting: "softbox studio lighting مع rim light",
+      style: "premium commercial photography",
+      quality: "ultra detailed 8K",
+      aspectRatio: "1:1"
+    }
+  },
+  {
+    id: "cinematic-video",
+    kind: "video",
+    icon: "🎬",
+    title: "فيديو سينمائي قصير",
+    type: "فيديو سينمائي",
+    description: "مشهد قصير بحركة كاميرا وإيقاع سينمائي.",
+    values: {
+      topic: "شخصية تمشي بثقة في موقع مفتوح وقت الغروب",
+      scene: "افتتاح بلقطة واسعة ثم اقتراب تدريجي من الشخصية",
+      place: "موقع حضري أنيق مع عمق ميداني واضح",
+      characterMovement: "مشي طبيعي وثابت مع حركة ملابس واقعية",
+      cameraMovement: "Tracking Shot",
+      cameraAngle: "eye-level cinematic angle",
+      lighting: "golden hour cinematic lighting",
+      mood: "هادئ وملهم وفاخر",
+      duration: "8 ثوانٍ",
+      speed: "حركة طبيعية مع تباطؤ خفيف في النهاية",
+      end: "تنتهي اللقطة على close-up هادئ",
+      quality: "4K cinematic",
+      aspectRatio: "16:9"
+    }
+  },
+  {
+    id: "reels-video",
+    kind: "video",
+    icon: "📱",
+    title: "Reels تعليمي",
+    type: "فيديو قصير Reels",
+    description: "فيديو رأسي سريع مناسب للمحتوى التعليمي القصير.",
+    values: {
+      topic: "شرح معلومة تعليمية واحدة بطريقة جذابة",
+      scene: "متحدث أمام خلفية تعليمية بسيطة مع عناصر بصرية تظهر بالتتابع",
+      characterMovement: "إيماءات يد طبيعية وتواصل بصري مباشر",
+      cameraMovement: "Static Shot",
+      mood: "نشط وواضح ومباشر",
+      duration: "15 ثانية",
+      speed: "سريع ومريح للمشاهدة",
+      audio: "صوت واضح ونظيف",
+      voiceover: "تعليق صوتي عربي فصيح وواضح",
+      quality: "4K vertical video",
+      aspectRatio: "9:16"
+    }
+  },
+  {
+    id: "pixar-character",
+    kind: "image",
+    icon: "✨",
+    title: "شخصية تعليمية 3D",
+    type: "أسلوب Pixar 3D",
+    description: "شخصية ثلاثية الأبعاد ودودة مناسبة للمواد التعليمية.",
+    values: {
+      subject: "شخصية معلمة تعليمية ثلاثية الأبعاد",
+      audience: "طلاب وطالبات التعليم العام",
+      character: "ملامح ودودة، تصميم احترافي، نسب متوازنة",
+      expression: "ابتسامة لطيفة وواثقة",
+      pose: "تقف وتشير بيدها إلى مساحة فارغة للشرح",
+      lighting: "soft studio lighting",
+      colors: "ألوان دافئة ومتناسقة",
+      style: "stylized 3D animated character",
+      quality: "high detail 3D render",
+      aspectRatio: "16:9"
+    }
+  },
+  {
+    id: "history-video",
+    kind: "video",
+    icon: "🏺",
+    title: "مشهد تاريخي وثائقي",
+    type: "فيديو تاريخي",
+    description: "مشهد تاريخي واقعي مع بيئة وملابس متسقة زمنيًا.",
+    values: {
+      topic: "مشهد تاريخي موثق بصريًا من حقبة محددة",
+      scene: "لقطة تأسيسية للمكان ثم انتقال إلى الشخصيات الرئيسية",
+      clothes: "ملابس مناسبة للحقبة التاريخية دون عناصر حديثة",
+      place: "بيئة تاريخية متسقة مع الزمان والمكان",
+      cameraMovement: "Dolly In",
+      lighting: "natural cinematic lighting",
+      mood: "وثائقي، جاد، واقعي",
+      duration: "12 ثانية",
+      quality: "4K documentary cinematic",
+      aspectRatio: "16:9"
+    }
+  }
+];
+
+const IMAGE_FIELDS = [
+  ["subject", "موضوع الصورة", "textarea", "صف المشهد أو الفكرة الرئيسية..."],
+  ["goal", "الهدف من الصورة", "text", "تعليمي، إعلاني، توعوي..."],
+  ["audience", "الفئة المستهدفة", "text", "مثال: طالبات المرحلة المتوسطة"],
+  ["character", "وصف الشخصية", "textarea", "الملامح، الهوية البصرية، التفاصيل..."],
+  ["age", "العمر", "text", "مثال: 25 سنة"],
+  ["gender", "الجنس", "select", ["غير محدد", "أنثى", "ذكر"]],
+  ["clothes", "الملابس", "textarea", "نوع الملابس وألوانها وتفاصيلها..."],
+  ["expression", "تعبيرات الوجه", "text", "مبتسم، واثق، مندهش..."],
+  ["pose", "وضعية الجسم", "text", "واقف، جالس، يشير..."],
+  ["place", "المكان", "text", "فصل، استوديو، مدينة، طبيعة..."],
+  ["background", "الخلفية", "textarea", "تفاصيل الخلفية والعمق..."],
+  ["elements", "العناصر الموجودة في المشهد", "textarea", "الأشياء والعناصر المساندة..."],
+  ["composition", "التكوين البصري", "textarea", "توزيع العناصر ونقطة التركيز والمساحات..."],
+  ["cameraAngle", "زاوية التصوير", "text", "eye-level, low angle, top view..."],
+  ["lens", "نوع العدسة", "text", "35mm, 50mm, macro..."],
+  ["lighting", "الإضاءة", "textarea", "ناعمة، درامية، نهارية، استوديو..."],
+  ["colors", "الألوان", "text", "لوحة الألوان المرغوبة..."],
+  ["realism", "مستوى الواقعية", "select", ["غير محدد", "واقعي", "واقعي جدًا", "فائق الواقعية", "أسلوبي/خيالي"]],
+  ["style", "الأسلوب الفني", "text", "cinematic, watercolor, 3D..."],
+  ["quality", "جودة الصورة", "select", ["4K high detail", "8K ultra detailed", "Studio quality", "Print-ready", "Web optimized"]],
+  ["aspectRatio", "نسبة أبعاد الصورة", "select", IMAGE_ASPECTS],
+  ["visibleText", "النصوص المطلوب ظهورها", "textarea", "اكتب النص حرفيًا إن وجد..."],
+  ["blocked", "العناصر المطلوب منع ظهورها", "textarea", "شعارات، أشخاص إضافيون، نصوص..." ]
+];
+
+const VIDEO_FIELDS = [
+  ["topic", "موضوع الفيديو", "textarea", "الفكرة أو الموضوع الرئيسي..."],
+  ["scene", "وصف المشهد", "textarea", "صف المشهد بصريًا بالتفصيل..."],
+  ["character", "الشخصية", "textarea", "وصف الشخصية والملامح..."],
+  ["clothes", "الملابس", "textarea", "نوع الملابس والألوان..."],
+  ["place", "المكان", "text", "الموقع أو البيئة..."],
+  ["motion", "الحركة", "textarea", "الحركة العامة داخل المشهد..."],
+  ["characterMovement", "حركة الشخصية", "textarea", "المشي، الإيماءات، الالتفات..."],
+  ["cameraMovement", "حركة الكاميرا", "select", CAMERA_MOVES],
+  ["cameraAngle", "زاوية التصوير", "text", "wide, eye-level, low angle..."],
+  ["lighting", "الإضاءة", "textarea", "cinematic, daylight, studio..."],
+  ["mood", "الجو العام", "text", "ملهم، حماسي، غامض..."],
+  ["style", "الأسلوب البصري", "text", "cinematic realism, anime, 3D..."],
+  ["duration", "مدة الفيديو", "text", "مثال: 8 ثوانٍ"],
+  ["speed", "سرعة الحركة", "text", "طبيعية، سريعة، بطيئة..."],
+  ["start", "وصف البداية", "textarea", "كيف تبدأ اللقطة؟"],
+  ["middle", "وصف منتصف المشهد", "textarea", "ماذا يحدث في المنتصف؟"],
+  ["end", "وصف نهاية المشهد", "textarea", "كيف تنتهي اللقطة؟"],
+  ["effects", "المؤثرات", "textarea", "جسيمات، ضباب، توهج، انتقالات..."],
+  ["audio", "الصوت", "textarea", "مؤثرات صوتية أو أجواء محيطة..."],
+  ["music", "الموسيقى", "textarea", "نوع الموسيقى وإيقاعها..."],
+  ["dialogue", "الحوار", "textarea", "النص المنطوق بين الشخصيات..."],
+  ["voiceover", "التعليق الصوتي", "textarea", "نص أو وصف التعليق الصوتي..."],
+  ["aspectRatio", "نسبة أبعاد الفيديو", "select", VIDEO_ASPECTS],
+  ["quality", "الجودة", "select", ["4K cinematic", "4K vertical video", "Full HD", "8K ultra detailed"]],
+  ["blocked", "العناصر الممنوعة", "textarea", "اهتزاز، تشوه، نصوص، شعارات..." ]
+];
+
+/* =========================
+   الحالة وعناصر DOM
+========================= */
+const state = {
+  selectedKind: null,
+  selectedType: null,
+  activeFilter: "الكل",
+  editingSavedId: null,
+  activeTemplate: null
+};
+
+const $ = (selector, scope = document) => scope.querySelector(selector);
+const $$ = (selector, scope = document) => [...scope.querySelectorAll(selector)];
+
+const imageCards = $("#imageCards");
+const videoCards = $("#videoCards");
+const filterChips = $("#filterChips");
+const typeSearch = $("#typeSearch");
+const modal = $("#builderModal");
+const modalTitle = $("#modalTitle");
+const modalKind = $("#modalKind");
+const dynamicFields = $("#dynamicFields");
+const promptForm = $("#promptForm");
+const promptOutput = $("#promptOutput");
+const resultPanel = $("#resultPanel");
+const resultMeta = $("#resultMeta");
+const negativePrompt = $("#negativePrompt");
+const savedPrompts = $("#savedPrompts");
+const savedEmpty = $("#savedEmpty");
+const savedSearch = $("#savedSearch");
+
+/* =========================
+   إنشاء البطاقات والفلاتر
+========================= */
+function createTypeCard([name, icon, tags], kind) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "type-card";
+  button.dataset.name = name.toLowerCase();
+  button.dataset.tags = tags.join("|");
+  button.dataset.kind = kind;
+  button.innerHTML = `
+    <span class="type-icon" aria-hidden="true">${icon}</span>
+    <h3>${escapeHtml(name)}</h3>
+    <p>${kind === "image" ? "أنشئ برومبت صورة منظمًا بتفاصيل الإضاءة والكاميرا والأسلوب." : "أنشئ برومبت فيديو بحركة كاميرا وتوقيت وصوت وتفاصيل سينمائية."}</p>
+    <span class="card-arrow" aria-hidden="true">←</span>
+  `;
+  button.setAttribute("aria-label", `فتح نموذج ${name}`);
+  button.addEventListener("click", () => openBuilder(kind, name));
+  return button;
+}
+
+function renderTypeCards() {
+  imageCards.replaceChildren(...IMAGE_TYPES.map(item => createTypeCard(item, "image")));
+  videoCards.replaceChildren(...VIDEO_TYPES.map(item => createTypeCard(item, "video")));
+  $("#imageCount").textContent = `${IMAGE_TYPES.length} نوع`;
+  $("#videoCount").textContent = `${VIDEO_TYPES.length} نوع`;
+}
+
+function renderFilters() {
+  filterChips.replaceChildren(...FILTERS.map(filter => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = `filter-chip${filter === state.activeFilter ? " active" : ""}`;
+    btn.textContent = filter;
+    btn.addEventListener("click", () => {
+      state.activeFilter = filter;
+      $$(".filter-chip").forEach(chip => chip.classList.toggle("active", chip.textContent === filter));
+      applyCardFilters();
+    });
+    return btn;
+  }));
+}
+
+function applyCardFilters() {
+  const query = typeSearch.value.trim().toLowerCase();
+  $$(".type-card").forEach(card => {
+    const matchesSearch = !query || card.dataset.name.includes(query) || card.textContent.toLowerCase().includes(query);
+    const tags = card.dataset.tags.split("|");
+    const matchesFilter = state.activeFilter === "الكل" || tags.includes(state.activeFilter);
+    card.classList.toggle("hidden-card", !(matchesSearch && matchesFilter));
+  });
+}
+
+/* =========================
+   بناء النموذج
+========================= */
+function makeField([name, label, type, optionsOrPlaceholder]) {
+  const wrap = document.createElement("div");
+  wrap.className = (type === "textarea" && ["subject", "scene", "topic", "character", "composition"].includes(name)) ? "field full-field" : "field";
+
+  const labelEl = document.createElement("label");
+  labelEl.htmlFor = `field-${name}`;
+  labelEl.textContent = label;
+  wrap.appendChild(labelEl);
+
+  let input;
+  if (type === "textarea") {
+    input = document.createElement("textarea");
+    input.rows = 3;
+    input.placeholder = optionsOrPlaceholder || "";
+  } else if (type === "select") {
+    input = document.createElement("select");
+    (optionsOrPlaceholder || []).forEach(option => {
+      const opt = document.createElement("option");
+      opt.value = option;
+      opt.textContent = option;
+      input.appendChild(opt);
+    });
+  } else {
+    input = document.createElement("input");
+    input.type = type;
+    input.placeholder = optionsOrPlaceholder || "";
+  }
+
+  input.name = name;
+  input.id = `field-${name}`;
+  input.autocomplete = "off";
+  wrap.appendChild(input);
+  return wrap;
+}
+
+function openBuilder(kind, typeName, presetValues = null) {
+  state.selectedKind = kind;
+  state.selectedType = typeName;
+  state.activeTemplate = presetValues;
+  state.editingSavedId = null;
+
+  modalKind.textContent = kind === "image" ? "تصميم صورة" : "تصميم فيديو";
+  modalTitle.textContent = typeName;
+  dynamicFields.replaceChildren(...(kind === "image" ? IMAGE_FIELDS : VIDEO_FIELDS).map(makeField));
+  promptForm.reset();
+  $("#promptLanguage").value = "both";
+  resultPanel.hidden = true;
+  promptOutput.value = "";
+  negativePrompt.value = "";
+
+  if (presetValues) {
+    Object.entries(presetValues).forEach(([key, value]) => {
+      const input = promptForm.elements[key];
+      if (input) input.value = value;
+    });
+  }
+
+  modal.hidden = false;
+  document.body.classList.add("modal-open");
+  $("#modalClose").focus();
+}
+
+function closeBuilder() {
+  modal.hidden = true;
+  document.body.classList.remove("modal-open");
+}
+
+function getFormValues() {
+  return Object.fromEntries(new FormData(promptForm).entries());
+}
+
+/* =========================
+   إنشاء البرومبت
+========================= */
+function clean(value) {
+  return (value || "").toString().trim();
+}
+
+function addArLine(lines, label, value) {
+  if (clean(value)) lines.push(`${label}: ${clean(value)}`);
+}
+
+function addEnLine(lines, label, value) {
+  if (clean(value)) lines.push(`${label}: ${clean(value)}`);
+}
+
+function buildArabicPrompt(kind, typeName, values) {
+  const lines = [];
+  lines.push(`أنشئ ${kind === "image" ? "صورة" : "فيديو"} احترافيًا من نوع: ${typeName}.`);
+
+  if (kind === "image") {
+    addArLine(lines, "الموضوع / Subject", values.subject);
+    addArLine(lines, "الهدف", values.goal);
+    addArLine(lines, "الفئة المستهدفة", values.audience);
+    addArLine(lines, "الشخصية", values.character);
+    addArLine(lines, "العمر", values.age);
+    addArLine(lines, "الجنس", values.gender === "غير محدد" ? "" : values.gender);
+    addArLine(lines, "الملابس", values.clothes);
+    addArLine(lines, "تعبير الوجه", values.expression);
+    addArLine(lines, "وضعية الجسم", values.pose);
+    addArLine(lines, "المشهد / Scene", values.elements);
+    addArLine(lines, "البيئة / Environment", [values.place, values.background].filter(clean).join("، "));
+    addArLine(lines, "التكوين / Composition", values.composition);
+    addArLine(lines, "الكاميرا / Camera", [values.cameraAngle, values.lens].filter(clean).join("، "));
+    addArLine(lines, "الإضاءة / Lighting", values.lighting);
+    addArLine(lines, "الألوان / Colors", values.colors);
+    addArLine(lines, "مستوى الواقعية", values.realism === "غير محدد" ? "" : values.realism);
+    addArLine(lines, "الأسلوب / Style", values.style);
+    addArLine(lines, "التفاصيل / Details", values.visibleText ? `إظهار النص التالي بدقة: «${values.visibleText}»` : "");
+    addArLine(lines, "الجودة / Quality", values.quality);
+    addArLine(lines, "نسبة الأبعاد / Aspect Ratio", values.aspectRatio);
+    addArLine(lines, "عناصر ممنوعة إضافية", values.blocked);
+  } else {
+    addArLine(lines, "الموضوع / Subject", values.topic);
+    addArLine(lines, "المشهد / Scene", values.scene);
+    addArLine(lines, "الشخصية", values.character);
+    addArLine(lines, "الملابس", values.clothes);
+    addArLine(lines, "البيئة / Environment", values.place);
+    addArLine(lines, "الحركة العامة / Motion", values.motion);
+    addArLine(lines, "حركة الشخصية / Character Movement", values.characterMovement);
+    addArLine(lines, "حركة الكاميرا / Camera Movement", values.cameraMovement);
+    addArLine(lines, "زاوية التصوير", values.cameraAngle);
+    addArLine(lines, "الإضاءة / Lighting", values.lighting);
+    addArLine(lines, "الجو العام", values.mood);
+    addArLine(lines, "الأسلوب السينمائي / Cinematic Style", values.style);
+    addArLine(lines, "التوقيت / Timing", [values.duration, values.speed].filter(clean).join("، "));
+    addArLine(lines, "البداية", values.start);
+    addArLine(lines, "منتصف المشهد", values.middle);
+    addArLine(lines, "النهاية", values.end);
+    addArLine(lines, "المؤثرات", values.effects);
+    addArLine(lines, "الصوت / Audio", values.audio);
+    addArLine(lines, "الموسيقى", values.music);
+    addArLine(lines, "الحوار / Dialogue", values.dialogue);
+    addArLine(lines, "التعليق الصوتي", values.voiceover);
+    addArLine(lines, "الجودة / Quality", values.quality);
+    addArLine(lines, "نسبة الأبعاد / Aspect Ratio", values.aspectRatio);
+    addArLine(lines, "عناصر ممنوعة إضافية", values.blocked);
+  }
+
+  addArLine(lines, "Negative Prompt", values.negativePrompt || DEFAULT_NEGATIVE_AR);
+  return lines.join("\n");
+}
+
+function buildEnglishPrompt(kind, typeName, values) {
+  const lines = [];
+  lines.push(`Create a professional ${kind === "image" ? "image" : "video"} prompt in the style/type: ${typeName}.`);
+
+  if (kind === "image") {
+    addEnLine(lines, "Subject", values.subject);
+    addEnLine(lines, "Purpose", values.goal);
+    addEnLine(lines, "Target audience", values.audience);
+    addEnLine(lines, "Character", values.character);
+    addEnLine(lines, "Age", values.age);
+    addEnLine(lines, "Gender", values.gender === "غير محدد" ? "" : values.gender);
+    addEnLine(lines, "Clothing", values.clothes);
+    addEnLine(lines, "Facial expression", values.expression);
+    addEnLine(lines, "Body pose", values.pose);
+    addEnLine(lines, "Scene elements", values.elements);
+    addEnLine(lines, "Environment", [values.place, values.background].filter(clean).join(", "));
+    addEnLine(lines, "Composition", values.composition);
+    addEnLine(lines, "Camera", [values.cameraAngle, values.lens].filter(clean).join(", "));
+    addEnLine(lines, "Lighting", values.lighting);
+    addEnLine(lines, "Colors", values.colors);
+    addEnLine(lines, "Realism level", values.realism === "غير محدد" ? "" : values.realism);
+    addEnLine(lines, "Style", values.style);
+    addEnLine(lines, "Details", values.visibleText ? `Render this exact visible text accurately: “${values.visibleText}”` : "");
+    addEnLine(lines, "Quality", values.quality);
+    addEnLine(lines, "Aspect Ratio", values.aspectRatio);
+    addEnLine(lines, "Additional exclusions", values.blocked);
+  } else {
+    addEnLine(lines, "Subject", values.topic);
+    addEnLine(lines, "Scene", values.scene);
+    addEnLine(lines, "Character", values.character);
+    addEnLine(lines, "Clothing", values.clothes);
+    addEnLine(lines, "Environment", values.place);
+    addEnLine(lines, "Motion", values.motion);
+    addEnLine(lines, "Character Movement", values.characterMovement);
+    addEnLine(lines, "Camera Movement", values.cameraMovement);
+    addEnLine(lines, "Camera Angle", values.cameraAngle);
+    addEnLine(lines, "Lighting", values.lighting);
+    addEnLine(lines, "Mood", values.mood);
+    addEnLine(lines, "Cinematic Style", values.style);
+    addEnLine(lines, "Timing", [values.duration, values.speed].filter(clean).join(", "));
+    addEnLine(lines, "Opening", values.start);
+    addEnLine(lines, "Middle", values.middle);
+    addEnLine(lines, "Ending", values.end);
+    addEnLine(lines, "Effects", values.effects);
+    addEnLine(lines, "Audio", values.audio);
+    addEnLine(lines, "Music", values.music);
+    addEnLine(lines, "Dialogue", values.dialogue);
+    addEnLine(lines, "Voice-over", values.voiceover);
+    addEnLine(lines, "Quality", values.quality);
+    addEnLine(lines, "Aspect Ratio", values.aspectRatio);
+    addEnLine(lines, "Additional exclusions", values.blocked);
+  }
+
+  addEnLine(lines, "Negative Prompt", values.negativePrompt || DEFAULT_NEGATIVE_EN);
+  return lines.join("\n");
+}
+
+function generatePromptText() {
+  const values = getFormValues();
+  const hasCore = state.selectedKind === "image" ? clean(values.subject) : clean(values.topic || values.scene);
+  if (!hasCore) {
+    showToast("أضيفي موضوعًا أو وصفًا أساسيًا قبل إنشاء البرومبت.", "error");
+    const target = state.selectedKind === "image" ? promptForm.elements.subject : promptForm.elements.topic;
+    target?.focus();
+    return null;
+  }
+
+  values.negativePrompt = clean(negativePrompt.value);
+  const language = values.promptLanguage || "both";
+  const ar = buildArabicPrompt(state.selectedKind, state.selectedType, values);
+  const en = buildEnglishPrompt(state.selectedKind, state.selectedType, values);
+
+  if (language === "ar") return ar;
+  if (language === "en") return en;
+  return `═══ البرومبت بالعربية ═══\n${ar}\n\n═══ English Prompt ═══\n${en}`;
+}
+
+function improvePromptText(text) {
+  if (!clean(text)) return text;
+  const enhancement = state.selectedKind === "image"
+    ? "\n\nتحسين احترافي: حافظ على وضوح نقطة التركيز، اتساق المنظور، تشريح طبيعي، تفاصيل دقيقة في الخامات، نطاق ديناميكي متوازن، وفصل بصري واضح بين الموضوع والخلفية دون ازدحام."
+    : "\n\nتحسين احترافي: حافظ على اتساق الشخصية بين الإطارات، حركة طبيعية دون قفزات، ثبات الهوية البصرية، motion continuity، cinematic pacing، انتقالات سلسة، وعدم تغيّر الملامح أو الملابس خلال اللقطة.";
+  return text.includes("تحسين احترافي:") ? text : text + enhancement;
+}
+
+/* =========================
+   الحفظ المحلي
+========================= */
+function getSavedItems() {
+  try {
+    return JSON.parse(localStorage.getItem("aiPromptStudioSaved") || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function setSavedItems(items) {
+  localStorage.setItem("aiPromptStudioSaved", JSON.stringify(items));
+}
+
+function saveCurrentPrompt() {
+  const text = clean(promptOutput.value);
+  if (!text) return showToast("لا يوجد برومبت لحفظه.", "error");
+
+  const items = getSavedItems();
+  const payload = {
+    id: state.editingSavedId || cryptoRandomId(),
+    title: state.selectedType || "برومبت محفوظ",
+    kind: state.selectedKind || "image",
+    text,
+    updatedAt: new Date().toISOString()
+  };
+
+  const existingIndex = items.findIndex(item => item.id === payload.id);
+  if (existingIndex >= 0) items[existingIndex] = payload;
+  else items.unshift(payload);
+
+  setSavedItems(items);
+  state.editingSavedId = payload.id;
+  renderSavedPrompts();
+  showToast(existingIndex >= 0 ? "تم تحديث البرومبت المحفوظ." : "تم حفظ البرومبت بنجاح.", "success");
+}
+
+function renderSavedPrompts() {
+  const query = savedSearch.value.trim().toLowerCase();
+  const items = getSavedItems().filter(item => !query || item.title.toLowerCase().includes(query) || item.text.toLowerCase().includes(query));
+  savedPrompts.replaceChildren();
+  savedEmpty.hidden = items.length > 0;
+
+  items.forEach(item => {
+    const card = document.createElement("article");
+    card.className = "saved-card";
+    const date = new Intl.DateTimeFormat("ar-SA", { dateStyle: "medium", timeStyle: "short" }).format(new Date(item.updatedAt));
+    card.innerHTML = `
+      <div class="saved-top">
+        <span class="kind-pill">${item.kind === "image" ? "صورة" : "فيديو"}</span>
+        <small>${escapeHtml(date)}</small>
+      </div>
+      <h3>${escapeHtml(item.title)}</h3>
+      <pre>${escapeHtml(item.text)}</pre>
+      <div class="saved-actions">
+        <button class="btn btn-ghost" data-action="edit">تعديل</button>
+        <button class="btn btn-ghost" data-action="copy">نسخ</button>
+        <button class="btn btn-danger" data-action="delete">حذف</button>
+      </div>
+    `;
+
+    $("[data-action='edit']", card).addEventListener("click", () => editSavedPrompt(item));
+    $("[data-action='copy']", card).addEventListener("click", () => copyText(item.text));
+    $("[data-action='delete']", card).addEventListener("click", () => deleteSavedPrompt(item.id));
+    savedPrompts.appendChild(card);
+  });
+}
+
+function editSavedPrompt(item) {
+  openBuilder(item.kind, item.title);
+  state.editingSavedId = item.id;
+  promptOutput.value = item.text;
+  resultPanel.hidden = false;
+  resultMeta.textContent = "وضع التعديل";
+  promptOutput.focus();
+}
+
+function deleteSavedPrompt(id) {
+  const items = getSavedItems().filter(item => item.id !== id);
+  setSavedItems(items);
+  if (state.editingSavedId === id) state.editingSavedId = null;
+  renderSavedPrompts();
+  showToast("تم حذف البرومبت.", "success");
+}
+
+/* =========================
+   القوالب
+========================= */
+function renderTemplates() {
+  const container = $("#templateCards");
+  container.replaceChildren(...TEMPLATES.map(template => {
+    const card = document.createElement("article");
+    card.className = "template-card";
+    card.innerHTML = `
+      <div class="template-top">
+        <span class="template-icon" aria-hidden="true">${template.icon}</span>
+        <span class="kind-pill">${template.kind === "image" ? "صورة" : "فيديو"}</span>
+      </div>
+      <h3>${escapeHtml(template.title)}</h3>
+      <p>${escapeHtml(template.description)}</p>
+      <button type="button" class="btn btn-ghost">استخدام القالب</button>
+    `;
+    $("button", card).addEventListener("click", () => openBuilder(template.kind, template.type, template.values));
+    return card;
+  }));
+}
+
+/* =========================
+   الوضع الليلي والتنبيهات
+========================= */
+function initTheme() {
+  const stored = localStorage.getItem("aiPromptStudioTheme");
+  const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)").matches;
+  const theme = stored || (prefersDark ? "dark" : "light");
+  document.documentElement.dataset.theme = theme;
+  updateThemeIcon(theme);
+}
+
+function toggleTheme() {
+  const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  document.documentElement.dataset.theme = next;
+  localStorage.setItem("aiPromptStudioTheme", next);
+  updateThemeIcon(next);
+}
+
+function updateThemeIcon(theme) {
+  $("#themeIcon").textContent = theme === "dark" ? "☀️" : "🌙";
+}
+
+function showToast(message, type = "info") {
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.setAttribute("role", "status");
+  toast.innerHTML = `<span aria-hidden="true">${type === "success" ? "✓" : type === "error" ? "!" : "i"}</span><span>${escapeHtml(message)}</span>`;
+  $("#toastContainer").appendChild(toast);
+  setTimeout(() => toast.remove(), 3200);
+}
+
+/* =========================
+   أدوات مساعدة
+========================= */
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function cryptoRandomId() {
+  if (window.crypto?.randomUUID) return crypto.randomUUID();
+  return `prompt-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+async function copyText(text) {
+  if (!clean(text)) return showToast("لا يوجد نص للنسخ.", "error");
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast("تم نسخ البرومبت بنجاح.", "success");
+  } catch {
+    try {
+      const area = document.createElement("textarea");
+      area.value = text;
+      area.style.position = "fixed";
+      area.style.opacity = "0";
+      document.body.appendChild(area);
+      area.select();
+      document.execCommand("copy");
+      area.remove();
+      showToast("تم نسخ البرومبت بنجاح.", "success");
+    } catch {
+      showToast("تعذر النسخ تلقائيًا. انسخي النص يدويًا.", "error");
+    }
+  }
+}
+
+/* =========================
+   الأحداث
+========================= */
+typeSearch.addEventListener("input", applyCardFilters);
+savedSearch.addEventListener("input", renderSavedPrompts);
+$("#themeToggle").addEventListener("click", toggleTheme);
+$("#modalClose").addEventListener("click", closeBuilder);
+$$('[data-close-modal]').forEach(el => el.addEventListener("click", closeBuilder));
+
+$("#fillNegative").addEventListener("click", () => {
+  negativePrompt.value = $("#promptLanguage").value === "en" ? DEFAULT_NEGATIVE_EN : DEFAULT_NEGATIVE_AR;
+  showToast("تمت إضافة قائمة منع مقترحة.", "info");
+});
+
+promptForm.addEventListener("submit", event => {
+  event.preventDefault();
+  const text = generatePromptText();
+  if (!text) return;
+  promptOutput.value = text;
+  resultPanel.hidden = false;
+  resultMeta.textContent = state.selectedKind === "image" ? "برومبت صورة" : "برومبت فيديو";
+  resultPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+$("#resetForm").addEventListener("click", () => {
+  promptForm.reset();
+  $("#promptLanguage").value = "both";
+  negativePrompt.value = "";
+  promptOutput.value = "";
+  resultPanel.hidden = true;
+  state.editingSavedId = null;
+  showToast("تم مسح النموذج وإعادة البدء.", "info");
+});
+
+$("#copyPrompt").addEventListener("click", () => copyText(promptOutput.value));
+$("#savePrompt").addEventListener("click", saveCurrentPrompt);
+$("#improvePrompt").addEventListener("click", () => {
+  const improved = improvePromptText(promptOutput.value);
+  if (!clean(improved)) return showToast("أنشئي البرومبت أولًا ثم استخدمي التحسين.", "error");
+  promptOutput.value = improved;
+  showToast("تم تحسين البرومبت وإضافة معايير احترافية.", "success");
+});
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && !modal.hidden) closeBuilder();
+});
+
+/* =========================
+   التهيئة
+========================= */
+function init() {
+  initTheme();
+  renderFilters();
+  renderTypeCards();
+  renderTemplates();
+  renderSavedPrompts();
+}
+
+init();
+
+  </script>
+</body>
+</html>
